@@ -369,6 +369,7 @@ awful.screen.connect_for_each_screen(function(s)
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
             spr,
+            spr,
             arrl_dl,
             wibox.container.background(volicon, beautiful.bg_focus),
             wibox.container.background(volume.widget, beautiful.bg_focus),
