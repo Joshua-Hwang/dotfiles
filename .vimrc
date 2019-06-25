@@ -1,5 +1,5 @@
 " ensure tabs are a nice length
-highlight SignColumn ctermbg=8
+highlight SignColumn ctermbg=0
 highlight ColorColumn ctermbg=2
 
 set tabstop=4
@@ -40,6 +40,9 @@ Plug 'vim-airline/vim-airline'
 
 Plug 'vim-airline/vim-airline-themes'
 
+" Base 16
+Plug 'chriskempson/base16-vim'
+
 call plug#end()
 
 let g:ale_fixers = {
@@ -60,3 +63,6 @@ let g:airline_theme = 'monochrome'
 let g:better_whitespace_enabled=1
 let g:strip_whitespace_on_save=1
 let g:strip_whitespace_confirm=0
+
+let base16colorspace=256
+colorscheme base16-gruvbox-dark-medium
