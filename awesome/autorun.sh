@@ -29,11 +29,12 @@ run compton --shadow-exclude '!focused'
 run blueman-applet
 run msm_notifier
 
+# we re-source our resources file
+run xrdb ~/.Xresources
 xset r rate 225 60
 run ibus-daemon -drx
 run redshift-gtk
 run feh --bg-fill $HOME/Pictures/wallpaper.jpg
-run xrdb ~/.Xresources
 run conky &
 run nm-applet
 run indicator-keylock
