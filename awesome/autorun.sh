@@ -18,13 +18,6 @@ if (command -v /usr/lib/mate-polkit/polkit-mate-authentication-agent-1 && ! pgre
     /usr/lib/mate-polkit/polkit-mate-authentication-agent-1 &
 fi
 
-run nm-applet
-run indicator-keylock
-#run light-locker
-#run xcape -e 'Super_L=Super_L|Control_L|Escape'
-run thunar --daemon
-run pamac-tray
-
 ## The following are not included in minimal edition by default
 ## but autorun.sh will pick them up if you install them
 
@@ -35,3 +28,16 @@ fi
 run compton --shadow-exclude '!focused'
 run blueman-applet
 run msm_notifier
+
+xset r rate 225 60
+run ibus-daemon -drx
+run redshift-gtk
+run feh --bg-fill $HOME/Pictures/wallpaper.jpg
+run xrdb ~/.Xresources
+run conky &
+run nm-applet
+run indicator-keylock
+#run light-locker
+#run xcape -e 'Super_L=Super_L|Control_L|Escape'
+run thunar --daemon
+run pamac-tray

@@ -517,7 +517,7 @@ globalkeys = my_table.join(
         {description = "toggle wibox", group = "awesome"}),
 
     -- On the fly useless gaps change
-    awful.key({ altkey, "Control" }, "+", function () lain.util.useless_gaps_resize(1) end,
+    awful.key({ altkey, "Control" }, "=", function () lain.util.useless_gaps_resize(1) end,
               {description = "increment useless gaps", group = "tag"}),
     awful.key({ altkey, "Control" }, "-", function () lain.util.useless_gaps_resize(-1) end,
               {description = "decrement useless gaps", group = "tag"}),
@@ -628,10 +628,38 @@ globalkeys = my_table.join(
         {description = "toggle mute", group = "hotkeys"}),
 
     -- Prompt
-    awful.key({ modkey }, "r", function () awful.screen.focused().mypromptbox:run() end,
-              {description = "run prompt", group = "launcher"}),
-    awful.key({ modkey }, "semicolon", function () awful.screen.focused().mypromptbox:run() end,
-              {description = "run prompt", group = "launcher"})
+    awful.key({ modkey }, "r",
+        function ()
+            --awful.screen.focused().mypromptbox:run()
+            cmdmsg = "bemenu-run"
+            cmdmsg = cmdmsg .. " --fn 'Unifont 10'"
+            cmdmsg = cmdmsg .. " --tb '" .. beautiful.bg_focus .. "'"
+            cmdmsg = cmdmsg .. " --tf '" .. beautiful.fg_focus .. "'"
+            cmdmsg = cmdmsg .. " --fb '" .. beautiful.bg_normal .. "'"
+            cmdmsg = cmdmsg .. " --ff '" .. beautiful.fg_normal .. "'"
+            cmdmsg = cmdmsg .. " --nb '" .. beautiful.bg_normal .. "'"
+            cmdmsg = cmdmsg .. " --nf '" .. beautiful.fg_normal .. "'"
+            cmdmsg = cmdmsg .. " --hb '" .. beautiful.border_focus .. "'"
+            cmdmsg = cmdmsg .. " --hf '" .. beautiful.bg_normal .. "'"
+            awful.spawn(cmdmsg)
+        end,
+        {description = "run prompt", group = "launcher"}),
+    awful.key({ modkey }, "semicolon",
+        function ()
+            --awful.screen.focused().mypromptbox:run()
+            cmdmsg = "bemenu-run"
+            cmdmsg = cmdmsg .. " --fn 'Unifont 10'"
+            cmdmsg = cmdmsg .. " --tb '" .. beautiful.bg_focus .. "'"
+            cmdmsg = cmdmsg .. " --tf '" .. beautiful.fg_focus .. "'"
+            cmdmsg = cmdmsg .. " --fb '" .. beautiful.bg_normal .. "'"
+            cmdmsg = cmdmsg .. " --ff '" .. beautiful.fg_normal .. "'"
+            cmdmsg = cmdmsg .. " --nb '" .. beautiful.bg_normal .. "'"
+            cmdmsg = cmdmsg .. " --nf '" .. beautiful.fg_normal .. "'"
+            cmdmsg = cmdmsg .. " --hb '" .. beautiful.border_focus .. "'"
+            cmdmsg = cmdmsg .. " --hf '" .. beautiful.bg_normal .. "'"
+            awful.spawn(cmdmsg)
+        end,
+        {description = "run prompt", group = "launcher"})
 )
 
 clientkeys = my_table.join(
