@@ -64,5 +64,11 @@ let g:better_whitespace_enabled=1
 let g:strip_whitespace_on_save=1
 let g:strip_whitespace_confirm=0
 
-let base16colorspace=256
-colorscheme base16-gruvbox-dark-medium
+"let base16colorspace=256
+if has('gui_running')
+    " GUI colors
+    colorscheme base16-default-light
+else
+    " Non-GUI (terminal) colors
+    "colorscheme base16-gruvbox-dark-medium
+endif
