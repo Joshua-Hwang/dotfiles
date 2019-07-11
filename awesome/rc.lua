@@ -411,11 +411,11 @@ root.buttons(my_table.join(
 globalkeys = my_table.join(
     -- Take a screenshot
     -- https://github.com/lcpz/dots/blob/master/bin/screenshot
-    awful.key({         }, "Print", function() os.execute("sleep 0.1 && i3-scrot -d") end,
+    awful.key({         }, "Print", function() awful.spawn.with_shell("/usr/bin/i3-scrot -d") end,
               {description = "take a screenshot", group = "screenshot"}),
-    awful.key({"Control"}, "Print", function () os.execute("sleep 0.1 && /usr/bin/i3-scrot -w")   end,
+    awful.key({"Control"}, "Print", function () awful.spawn.with_shell("/usr/bin/i3-scrot -w")   end,
               {description = "capture a screenshot of active window", group = "screenshot"}),
-    awful.key({"Shift"  }, "Print", function () os.execute("sleep 0.1 && /usr/bin/i3-scrot -s")   end,
+    awful.key({"Shift"  }, "Print", function () awful.spawn.with_shell("/usr/bin/i3-scrot -s")   end,
               {description = "capture a screenshot of selection", group = "screenshot"}),
 
     -- X screen locker
