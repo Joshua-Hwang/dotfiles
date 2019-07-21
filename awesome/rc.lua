@@ -301,15 +301,15 @@ volume.widget:buttons(awful.util.table.join(
         awful.spawn("pavucontrol")
     end),
     awful.button({}, 3, function() -- right click
-        os.execute(string.format("pactl set-sink-mute %d toggle", volume.device))
+        awful.spawn.with_shell(string.format("pactl set-sink-mute %d toggle", volume.device))
         volume.update()
     end),
     awful.button({}, 4, function() -- scroll up
-        os.execute(string.format("pactl set-sink-volume %d +1%%", volume.device))
+        awful.spawn.with_shell(string.format("pactl set-sink-volume %d +1%%", volume.device))
         volume.update()
     end),
     awful.button({}, 5, function() -- scroll down
-        os.execute(string.format("pactl set-sink-volume %d -1%%", volume.device))
+        awful.spawn.with_shell(string.format("pactl set-sink-volume %d -1%%", volume.device))
         volume.update()
     end)
 ))
@@ -593,13 +593,13 @@ globalkeys = my_table.join(
     -- Brightness
     awful.key({ }, "XF86MonBrightnessUp",
         function ()
-            os.execute("xbacklight -inc 1")
+            awful.spawn.with_shell("xbacklight -inc 1")
             --awful.spawn.with_shell("notify-send \"Backlight: $(xbacklight -get)\"")
         end,
         {description = "+1%", group = "hotkeys"}),
     awful.key({ }, "XF86MonBrightnessDown",
         function ()
-            os.execute("xbacklight -dec 1")
+            awful.spawn.with_shell("xbacklight -dec 1")
             --awful.spawn.with_shell("notify-send \"Backlight: $(xbacklight -get)\"")
         end,
         {description = "-1%", group = "hotkeys"}),
@@ -607,21 +607,21 @@ globalkeys = my_table.join(
     -- PulseAudio volume control
     awful.key({ }, "XF86AudioRaiseVolume",
         function ()
-            os.execute("pactl set-sink-volume @DEFAULT_SINK@ +1000")
+            awful.spawn.with_shell("pactl set-sink-volume @DEFAULT_SINK@ +1000")
             volume.update()
             --awful.spawn("pavolume show")
         end,
         {description = "volume up", group = "hotkeys"}),
     awful.key({ }, "XF86AudioLowerVolume",
         function ()
-            os.execute("pactl set-sink-volume @DEFAULT_SINK@ -1000")
+            awful.spawn.with_shell("pactl set-sink-volume @DEFAULT_SINK@ -1000")
             volume.update()
             --awful.spawn("pavolume show")
         end,
         {description = "volume down", group = "hotkeys"}),
     awful.key({ }, "XF86AudioMute",
         function ()
-            os.execute("pactl set-sink-mute @DEFAULT_SINK@ toggle")
+            awful.spawn.with_shell("pactl set-sink-mute @DEFAULT_SINK@ toggle")
             volume.update()
             --awful.spawn("pavolume show")
         end,
