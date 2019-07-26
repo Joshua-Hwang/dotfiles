@@ -60,7 +60,7 @@ local function run_once(cmd_arr)
     end
 end
 
---run_once({ "urxvtd", "unclutter -root" }) -- entries must be separated by commas
+run_once({ "urxvtd", "unclutter -root" }) -- entries must be separated by commas
 
 -- This function implements the XDG autostart specification
 --[[
@@ -78,8 +78,8 @@ awful.spawn.with_shell(
 
 local modkey       = "Mod4"
 local altkey       = "Mod1"
-local terminal     = "termite"
-local floating_terminal = "termite --name=floating"
+local terminal     = "urxvt"
+local floating_terminal = "urxvt -name=floating"
 local editor       = os.getenv("EDITOR") or "vim"
 local gui_editor   = "gvim"
 local browser      = "firefox"
