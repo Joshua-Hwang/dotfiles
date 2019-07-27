@@ -1,7 +1,8 @@
 local dpi   = require("beautiful.xresources").apply_dpi
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/"
-theme.font                                      = "Unifont 10"
+theme.font                                      = "Unifont 12"
+theme.menu_font                                 = "Unifont 14"
 
 theme.base00                                    = "#282828"
 theme.base01                                    = "#3C3836"

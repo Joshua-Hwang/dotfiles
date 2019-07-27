@@ -2,7 +2,7 @@
 * So apparently you have to use dbus-x11
 * awesomewm
 * lain
-* redshift
+* redshift-gtk
 * conky
 * termite
 * bemenu
@@ -10,3 +10,5 @@
 * physlock
 * unifont
 * unison
+* xbacklight (or acpi backlight)
+* feh

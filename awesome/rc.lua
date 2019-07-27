@@ -79,7 +79,7 @@ awful.spawn.with_shell(
 local modkey       = "Mod4"
 local altkey       = "Mod1"
 local terminal     = "urxvt"
-local floating_terminal = "urxvt -name=floating"
+local floating_terminal = "urxvt -name floating"
 local editor       = os.getenv("EDITOR") or "vim"
 local gui_editor   = "gvim"
 local browser      = "firefox"
@@ -257,7 +257,7 @@ local temp = lain.widget.temp({
 -- / fs
 local fsicon = wibox.widget.imagebox(beautiful.widget_hdd)
 fs = lain.widget.fs({
-    notification_preset = { fg = beautiful.fg_normal, bg = beautiful.bg_normal, font = "xos4 Terminus 10" },
+    notification_preset = { fg = beautiful.fg_normal, bg = beautiful.bg_normal, font = beautiful.font },
     settings = function()
         widget:set_markup(markup.font(beautiful.font, " " .. fs_now["/"].percentage .. "% "))
     end
@@ -632,7 +632,7 @@ globalkeys = my_table.join(
         function ()
             --awful.screen.focused().mypromptbox:run()
             cmdmsg = "bemenu-run"
-            cmdmsg = cmdmsg .. " --fn 'Unifont 10'"
+            cmdmsg = cmdmsg .. " --fn '" .. beautiful.menu_font .. "'"
             cmdmsg = cmdmsg .. " --tb '" .. beautiful.bg_focus .. "'"
             cmdmsg = cmdmsg .. " --tf '" .. beautiful.fg_focus .. "'"
             cmdmsg = cmdmsg .. " --fb '" .. beautiful.bg_normal .. "'"
@@ -648,7 +648,7 @@ globalkeys = my_table.join(
         function ()
             --awful.screen.focused().mypromptbox:run()
             cmdmsg = "bemenu-run"
-            cmdmsg = cmdmsg .. " --fn 'Unifont 10'"
+            cmdmsg = cmdmsg .. " --fn '" .. beautiful.menu_font .. "'"
             cmdmsg = cmdmsg .. " --tb '" .. beautiful.bg_focus .. "'"
             cmdmsg = cmdmsg .. " --tf '" .. beautiful.fg_focus .. "'"
             cmdmsg = cmdmsg .. " --fb '" .. beautiful.bg_normal .. "'"
