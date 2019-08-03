@@ -13,3 +13,5 @@
 * unison
 * xbacklight (or acpi backlight)
 * feh
+
+This repo has submodules so you'll need to keep that in mind
