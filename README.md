@@ -2,6 +2,7 @@
 * So apparently you have to use dbus-x11
 * awesomewm
 * lain
+* awesome-cyclefocus
 * redshift-gtk
 * conky
 * termite

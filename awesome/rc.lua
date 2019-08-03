@@ -2,6 +2,8 @@
 
      Awesome WM configuration template
      github.com/lcpz
+     modified by
+     github.com/Joshua-Hwang
 
 --]]
 
@@ -22,6 +24,7 @@ local hotkeys_popup = require("awful.hotkeys_popup").widget
                       require("awful.hotkeys_popup.keys")
 local my_table      = awful.util.table or gears.table -- 4.{0,1} compatibility
 local dpi           = require("beautiful.xresources").apply_dpi
+local cyclefocus    = require('cyclefocus')
 
 local markup = lain.util.markup
 local separators = lain.util.separators
@@ -285,7 +288,8 @@ local bat = lain.widget.bat({
     end
 })
 
--- Pulse
+-- Pulse (note there is a concurrency issue with spawning a shell then
+-- updating haven't bothered to try and fix)
 local volicon = wibox.widget.imagebox(beautiful.widget_vol)
 local volume = lain.widget.pulse({
     settings = function()
@@ -495,6 +499,7 @@ globalkeys = my_table.join(
               {description = "focus the previous screen", group = "screen"}),
     awful.key({ modkey,           }, "u", awful.client.urgent.jumpto,
               {description = "jump to urgent client", group = "client"}),
+--[[ Used to cycle windows previously see clientkeys for the cyclefocus solution
     awful.key({ altkey,           }, "Tab",
         function ()
             awful.client.focus.byidx(-1)
@@ -504,6 +509,7 @@ globalkeys = my_table.join(
             end
         end,
         {description = "go back", group = "client"}),
+--]]
 
     -- Show/Hide Wibox
     awful.key({ modkey }, "b", function ()
@@ -695,7 +701,11 @@ clientkeys = my_table.join(
             c.maximized = not c.maximized
             c:raise()
         end ,
-        {description = "maximize", group = "client"})
+        {description = "maximize", group = "client"}),
+    cyclefocus.key({ altkey, }, "Tab", {
+        cycle_filters = { cyclefocus.filters.same_screen, cyclefocus.filters.common_tag },
+        keys = {'Tab', 'ISO_Left_Tab'}
+    })
 )
 
 -- Bind all key numbers to tags.
