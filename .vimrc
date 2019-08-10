@@ -4,8 +4,9 @@ highlight ColorColumn ctermbg=2 ctermfg=0
 highlight MatchParen ctermfg=0
 
 set mouse=a
+set backspace=2
 
-set tabstop=4
+set tabstop=8
 set softtabstop=0
 set expandtab
 set shiftwidth=4
@@ -49,6 +50,10 @@ Plug 'vim-airline/vim-airline-themes'
 
 " Base 16
 Plug 'chriskempson/base16-vim'
+
+" Kernel Normal Form
+"Plug 'vivien/vim-linux-coding-style'
+Plug 'ninjin/vim-openbsd'
 
 call plug#end()
 
