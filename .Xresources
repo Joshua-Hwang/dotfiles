@@ -54,5 +54,6 @@
 *color21:      base06
 
 URxvt.font: xft:Unifont:size=12:antialias=false
+!URxvt.font: xft:Unifont:size=24:antialias=false
 URxvt.scrollBar: false
 URxvt.internalBorder: 10

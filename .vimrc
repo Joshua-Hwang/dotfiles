@@ -1,7 +1,8 @@
 " ensure tabs are a nice length
 highlight SignColumn ctermbg=0
-highlight ColorColumn ctermbg=2 ctermfg=0
+highlight ColorColumn ctermbg=235 ctermfg=1
 highlight MatchParen ctermfg=0
+highlight Conceal ctermbg=235 ctermfg=231
 
 set mouse=a
 set backspace=2
@@ -19,13 +20,18 @@ set ruler
 set signcolumn=yes
 
 set bg=dark
-set cc=80
+let &colorcolumn=join(range(81,999),",")
 
 set wrap!
 
 inoremap <S-Tab> <C-d>
 set scrolloff=4
 set noshowmode
+
+" ~Fancy~
+set conceallevel=0
+map <F2> :set conceallevel=2 <Cr>
+map <F3> :set conceallevel=0 <Cr>
 
 call plug#begin('~/.vim/plugged')
 
@@ -54,6 +60,13 @@ Plug 'chriskempson/base16-vim'
 " Kernel Normal Form
 "Plug 'vivien/vim-linux-coding-style'
 Plug 'ninjin/vim-openbsd'
+
+" indent aligning
+"Plug 'Yggdroot/indentLine'
+Plug 'nathanaelkane/vim-indent-guides'
+
+" Conceal
+Plug 'KeitaNakamura/tex-conceal.vim', {'for': 'tex'}
 
 call plug#end()
 
@@ -99,6 +112,12 @@ function! s:plug_help_sink(line)
   tabnew
   execute 'Explore' dir
 endfunction
+
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_guide_size = 1
+let g:indent_guides_auto_colors = 0
+highlight IndentGuidesOdd ctermbg=235
+highlight IndentGuidesEven ctermbg=236
 
 command! PlugHelp call fzf#run(fzf#wrap({
   \ 'source': sort(keys(g:plugs)),
