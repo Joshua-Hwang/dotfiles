@@ -288,7 +288,7 @@ local bat = lain.widget.bat({
     settings = function()
         if bat_now.status and bat_now.status ~= "N/A" then
             local batcolor = beautiful.fg_normal
-            if bat_now.ac_status == 1 or bat_now.status == "Charging" then
+            if bat_now.status ~= "Discharging" then
                 baticon:set_image(beautiful.widget_ac)
             elseif bat_now.perc and tonumber(bat_now.perc) <= 10 then
                 batcolor = beautiful.fg_panic
