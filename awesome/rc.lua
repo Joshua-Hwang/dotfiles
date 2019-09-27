@@ -262,10 +262,10 @@ local tempicon = wibox.widget.imagebox(beautiful.widget_temp)
 local temp = lain.widget.temp({
     settings = function()
         local tempcolor = beautiful.fg_normal
-        if tonumber(coretemp_now) >= 70 then
-            cpucolor = beautiful.fg_panic
-        elseif tonumber(cpu_now.usage) >= 65 then
-            cpucolor = beautiful.fg_alarm
+        if tonumber(coretemp_now) >= 65 then
+            tempcolor = beautiful.fg_panic
+        elseif tonumber(coretemp_now) >= 60 then
+            tempcolor = beautiful.fg_alarm
         end
         widget:set_markup("<span color=\"" .. tempcolor .."\">"
             .. markup.font(beautiful.font, " " .. coretemp_now .. "°C ")
@@ -288,7 +288,7 @@ local bat = lain.widget.bat({
     settings = function()
         if bat_now.status and bat_now.status ~= "N/A" then
             local batcolor = beautiful.fg_normal
-            if bat_now.ac_status == 1 then
+            if bat_now.ac_status == 1 or bat_now.status == "Charging" then
                 baticon:set_image(beautiful.widget_ac)
             elseif bat_now.perc and tonumber(bat_now.perc) <= 10 then
                 batcolor = beautiful.fg_panic
