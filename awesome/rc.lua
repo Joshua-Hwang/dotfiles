@@ -245,7 +245,15 @@ local mem = lain.widget.mem({
 local cpuicon = wibox.widget.imagebox(beautiful.widget_cpu)
 local cpu = lain.widget.cpu({
     settings = function()
-        widget:set_markup(markup.font(beautiful.font, " " .. cpu_now.usage .. "% "))
+        local cpucolor = beautiful.fg_normal
+        if tonumber(cpu_now.usage) >= 90 then
+            cpucolor = beautiful.fg_panic
+        elseif tonumber(cpu_now.usage) >= 75 then
+            cpucolor = beautiful.fg_alarm
+        end
+        widget:set_markup("<span color=\"" .. cpucolor .."\">"
+            .. markup.font(beautiful.font, " " .. cpu_now.usage .. "% ")
+            .. "</span>")
     end
 })
 
@@ -253,7 +261,15 @@ local cpu = lain.widget.cpu({
 local tempicon = wibox.widget.imagebox(beautiful.widget_temp)
 local temp = lain.widget.temp({
     settings = function()
-        widget:set_markup(markup.font(beautiful.font, " " .. coretemp_now .. "°C "))
+        local tempcolor = beautiful.fg_normal
+        if tonumber(coretemp_now) >= 70 then
+            cpucolor = beautiful.fg_panic
+        elseif tonumber(cpu_now.usage) >= 65 then
+            cpucolor = beautiful.fg_alarm
+        end
+        widget:set_markup("<span color=\"" .. tempcolor .."\">"
+            .. markup.font(beautiful.font, " " .. coretemp_now .. "°C ")
+            .. "</span>")
     end
 })
 
@@ -271,16 +287,22 @@ local baticon = wibox.widget.imagebox(beautiful.widget_battery)
 local bat = lain.widget.bat({
     settings = function()
         if bat_now.status and bat_now.status ~= "N/A" then
+            local batcolor = beautiful.fg_normal
             if bat_now.ac_status == 1 then
                 baticon:set_image(beautiful.widget_ac)
-            elseif not bat_now.perc and tonumber(bat_now.perc) <= 5 then
+            elseif bat_now.perc and tonumber(bat_now.perc) <= 10 then
+                batcolor = beautiful.fg_panic
                 baticon:set_image(beautiful.widget_battery_empty)
-            elseif not bat_now.perc and tonumber(bat_now.perc) <= 15 then
+            elseif bat_now.perc and tonumber(bat_now.perc) <= 25 then
+                batcolor = beautiful.fg_alarm
                 baticon:set_image(beautiful.widget_battery_low)
             else
+                batcolor = beautiful.base0C
                 baticon:set_image(beautiful.widget_battery)
             end
-            widget:set_markup(markup.font(beautiful.font, " " .. bat_now.perc .. "% "))
+            widget:set_markup("<span color=\"" .. batcolor .."\">"
+                .. markup.font(beautiful.font, " " .. bat_now.perc .. "% ")
+                .. "</span>")
         else
             widget:set_markup(markup.font(beautiful.font, " AC "))
             baticon:set_image(beautiful.widget_ac)
@@ -290,14 +312,30 @@ local bat = lain.widget.bat({
 
 -- Pulse (note there is a concurrency issue with spawning a shell then
 -- updating haven't bothered to try and fix)
-local volicon = wibox.widget.imagebox(beautiful.widget_vol)
+local volicon = wibox.widget.imagebox(beautiful.widget_vol_low)
 local volume = lain.widget.pulse({
     settings = function()
+        local volcolor = beautiful.fg_normal
+        local volavg = (tonumber(volume_now.left) + tonumber(volume_now.right))/2
         vlevel = volume_now.left .. "-" .. volume_now.right .. "% | " .. volume_now.device
+
         if volume_now.muted == "yes" then
             vlevel = vlevel .. " M"
+            volcolor = beautiful.bg_normal
+            volicon:set_image(beautiful.widget_vol_mute)
+        elseif volavg > 100 then
+            volcolor = beautiful.fg_alarm
+            volicon:set_image(beautiful.widget_vol)
+        elseif volavg <= 1  then
+            volcolor = beautiful.bg_normal
+            volicon:set_image(beautiful.widget_vol_no)
+        else
+            volicon:set_image(beautiful.widget_vol_low)
         end
-        widget:set_markup(markup.font(beautiful.font, " " .. vlevel .. " "))
+
+        widget:set_markup("<span color=\"" .. volcolor .. "\">"
+            .. markup.font(beautiful.font, " " .. vlevel .. " ")
+            .. "</span>")
     end
 })
 volume.widget:buttons(awful.util.table.join(

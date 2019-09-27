@@ -6,6 +6,7 @@ highlight Conceal ctermbg=235 ctermfg=231
 
 set mouse=a
 set backspace=2
+set clipboard=unnamedplus
 
 set tabstop=8
 set softtabstop=0
@@ -19,6 +20,9 @@ set ignorecase
 set ruler
 set signcolumn=yes
 
+set nrformats+=alpha
+
+set ttyfast
 set bg=dark
 let &colorcolumn=join(range(81,999),",")
 
@@ -28,24 +32,37 @@ inoremap <S-Tab> <C-d>
 set scrolloff=4
 set noshowmode
 
+nmap <F5> :make <Cr>
+
+nmap <S-h> <C-w>h
+nmap <S-j> <C-w>j
+nmap <S-k> <C-w>k
+nmap <S-l> <C-w>l
+
 " ~Fancy~
 set conceallevel=0
 map <F2> :set conceallevel=2 <Cr>
 map <F3> :set conceallevel=0 <Cr>
 
+filetype plugin on
+
 call plug#begin('~/.vim/plugged')
 
 Plug 'junegunn/vim-plug'
-Plug '/usr/bin/fzf'
+
+Plug 'chrisbra/Colorizer'
 
 "Plug 'ntpeters/vim-better-whitespace'
+Plug 'andymass/vim-matchup'
 
 " All for latex
 Plug 'w0rp/ale'
 
+"Plug 'sheerun/vim-polyglot'
+
 Plug 'lervag/vimtex'
 
-Plug 'neomake/neomake'
+"Plug 'neomake/neomake'
 
 "Plug 'vim-syntastic/syntastic'
 
@@ -72,10 +89,15 @@ call plug#end()
 
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'javascript': ['eslint'],
+\ 'tex': [],
 \}
+let g:ale_linters_explicit = 1
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_text_changed = 'never'
+let g:ale_set_ballons = 1
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
@@ -85,20 +107,14 @@ let g:syntastic_check_on_wq = 0
 let g:airline#extensions#ale#enabled = 1
 let g:airline_theme = 'monochrome'
 
+let g:matchup_matchparen_deferred = 1
+
 let g:better_whitespace_enabled=1
 let g:strip_whitespace_on_save=1
 let g:strip_whitespace_confirm=0
 
 let g:vimtex_indent_enabled=0
-
-"let base16colorspace=256
-if has('gui_running')
-    " GUI colors
-    colorscheme base16-default-light
-else
-    " Non-GUI (terminal) colors
-    "colorscheme base16-gruvbox-dark-medium
-endif
+let g:matchup_override_vimtex=1
 
 function! s:plug_help_sink(line)
   let dir = g:plugs[a:line].dir
