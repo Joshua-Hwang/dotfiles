@@ -112,7 +112,7 @@ awful.layout.layouts = {
     --lain.layout.cascade.tile,
     --lain.layout.centerwork,
     --lain.layout.centerwork.horizontal,
-    --lain.layout.termfair,
+    lain.layout.termfair,
     --lain.layout.termfair.center,
 }
 
@@ -853,6 +853,7 @@ awful.rules.rules = {
           "DTA",  -- Firefox addon DownThemAll.
           "copyq",  -- Includes session name in class.
           "floating",
+          "matplotlib",
         },
         class = {
           "Arandr",
@@ -864,6 +865,7 @@ awful.rules.rules = {
           "pinentry",
           "veromix",
           "xtightvncviewer",
+          "matplotlib",
          },
         name = {
           "Event Tester",  -- xev.

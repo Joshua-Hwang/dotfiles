@@ -51,6 +51,7 @@ theme.layout_tilebottom                         = theme.dir .. "/icons/tilebotto
 theme.layout_tiletop                            = theme.dir .. "/icons/tiletop.png"
 theme.layout_fairv                              = theme.dir .. "/icons/fairv.png"
 theme.layout_fairh                              = theme.dir .. "/icons/fairh.png"
+theme.layout_termfair                           = theme.dir .. "/icons/centerfair.png"
 theme.layout_spiral                             = theme.dir .. "/icons/spiral.png"
 theme.layout_dwindle                            = theme.dir .. "/icons/dwindle.png"
 theme.layout_max                                = theme.dir .. "/icons/max.png"

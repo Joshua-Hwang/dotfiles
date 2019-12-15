@@ -31,7 +31,7 @@ run msm_notifier
 
 # we re-source our resources file
 run xrdb ~/.Xresources
-xset r rate 225 60
+xset r rate 250 60
 run ibus-daemon -drx
 run redshift-gtk
 run feh --bg-fill $HOME/Pictures/wallpaper.jpg

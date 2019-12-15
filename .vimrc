@@ -1,9 +1,3 @@
-" ensure tabs are a nice length
-highlight SignColumn ctermbg=0
-highlight ColorColumn ctermbg=235 ctermfg=1
-highlight MatchParen ctermfg=0
-highlight Conceal ctermbg=235 ctermfg=231
-
 set mouse=a
 set backspace=2
 set clipboard=unnamedplus
@@ -19,6 +13,7 @@ set hlsearch
 set ignorecase
 set ruler
 set signcolumn=yes
+set keywordprg=:Man
 
 set nrformats+=alpha
 
@@ -28,16 +23,33 @@ let &colorcolumn=join(range(81,999),",")
 
 set wrap!
 
+" if hidden is not set, TextEdit might fail.
+set hidden
+
+" Some servers have issues with backup files, see #649
+set nobackup
+set nowritebackup
+
+" Better display for messages
+set cmdheight=2
+
+" You will have bad experience for diagnostic messages when it's default 4000.
+set updatetime=300
+
+" don't give |ins-completion-menu| messages.
+set shortmess+=c
+
 inoremap <S-Tab> <C-d>
+inoremap <M-n> <C-n>
 set scrolloff=4
 set noshowmode
 
 nmap <F5> :make <Cr>
 
-nmap <S-h> <C-w>h
-nmap <S-j> <C-w>j
-nmap <S-k> <C-w>k
-nmap <S-l> <C-w>l
+"nmap <S-h> <C-w>h
+"nmap <S-j> <C-w>j
+"nmap <S-k> <C-w>k
+"nmap <S-l> <C-w>l
 
 " ~Fancy~
 set conceallevel=0
@@ -56,13 +68,7 @@ Plug 'chrisbra/Colorizer'
 Plug 'andymass/vim-matchup'
 
 " All for latex
-Plug 'w0rp/ale'
-
-"Plug 'sheerun/vim-polyglot'
-
 Plug 'lervag/vimtex'
-
-"Plug 'neomake/neomake'
 
 "Plug 'vim-syntastic/syntastic'
 
@@ -74,9 +80,7 @@ Plug 'vim-airline/vim-airline-themes'
 " Base 16
 Plug 'chriskempson/base16-vim'
 
-" Kernel Normal Form
-"Plug 'vivien/vim-linux-coding-style'
-Plug 'ninjin/vim-openbsd'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " indent aligning
 "Plug 'Yggdroot/indentLine'
@@ -87,22 +91,7 @@ Plug 'KeitaNakamura/tex-conceal.vim', {'for': 'tex'}
 
 call plug#end()
 
-let g:ale_fixers = {
-\   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\ 'tex': [],
-\}
-let g:ale_linters_explicit = 1
-let g:ale_fix_on_save = 1
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_set_ballons = 1
-let g:ale_echo_msg_error_str = 'E'
-let g:ale_echo_msg_warning_str = 'W'
-let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+set statusline^=%{coc#status()}
 
 let g:airline#extensions#ale#enabled = 1
 let g:airline_theme = 'monochrome'
@@ -115,6 +104,44 @@ let g:strip_whitespace_confirm=0
 
 let g:vimtex_indent_enabled=0
 let g:matchup_override_vimtex=1
+
+inoremap <silent><expr> <c-space> coc#refresh()
+
+inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" Use `[g` and `]g` to navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gs :call CocAction('jumpDefinition', 'split')
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Remap for rename current word
+nmap <M-r> <Plug>(coc-rename)
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
 
 function! s:plug_help_sink(line)
   let dir = g:plugs[a:line].dir
@@ -138,3 +165,14 @@ highlight IndentGuidesEven ctermbg=236
 command! PlugHelp call fzf#run(fzf#wrap({
   \ 'source': sort(keys(g:plugs)),
   \ 'sink':   function('s:plug_help_sink')}))
+
+" ensure tabs are a nice length
+highlight SignColumn ctermbg=0
+highlight ColorColumn ctermbg=0 ctermfg=1
+highlight MatchParen ctermfg=0
+highlight Conceal ctermbg=235 ctermfg=231
+
+highlight Pmenu ctermbg=0 ctermfg=15
+highlight PmenuSel ctermbg=15 ctermfg=0
+highlight PmenuSbar ctermbg=15 ctermfg=0
+highlight PmenuThumb ctermbg=5 ctermfg=0
