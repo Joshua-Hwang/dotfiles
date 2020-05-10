@@ -5,11 +5,15 @@ set clipboard=unnamedplus
 set tabstop=8
 set softtabstop=0
 set expandtab
+set wildmenu
 set shiftwidth=4
 set autoindent
 "set smartindent
+"set number
 
 set hlsearch
+set incsearch
+set showcmd
 set ignorecase
 set ruler
 set signcolumn=yes
@@ -19,7 +23,8 @@ set nrformats+=alpha
 
 set ttyfast
 set bg=dark
-let &colorcolumn=join(range(81,999),",")
+set textwidth=80
+set colorcolumn=80
 
 set wrap!
 
@@ -45,11 +50,14 @@ set scrolloff=4
 set noshowmode
 
 nmap <F5> :make <Cr>
+tnoremap <Esc> <C-\><C-n>
 
-"nmap <S-h> <C-w>h
-"nmap <S-j> <C-w>j
-"nmap <S-k> <C-w>k
-"nmap <S-l> <C-w>l
+nmap <silent> <C-h> :wincmd h<Cr> 
+nmap <silent> <C-j> :wincmd j<Cr> 
+nmap <silent> <C-k> :wincmd k<Cr> 
+nmap <silent> <C-l> :wincmd l<Cr> 
+
+nmap <silent> <C-Tab> :tabnext<Cr>
 
 " ~Fancy~
 set conceallevel=0
@@ -62,6 +70,10 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'junegunn/vim-plug'
 
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+
+Plug 'preservim/nerdtree'
 Plug 'chrisbra/Colorizer'
 
 "Plug 'ntpeters/vim-better-whitespace'
@@ -69,6 +81,8 @@ Plug 'andymass/vim-matchup'
 
 " All for latex
 Plug 'lervag/vimtex'
+
+Plug 'shime/vim-livedown'
 
 "Plug 'vim-syntastic/syntastic'
 
@@ -105,6 +119,8 @@ let g:strip_whitespace_confirm=0
 let g:vimtex_indent_enabled=0
 let g:matchup_override_vimtex=1
 
+let g:livedown_browser = "firefox"
+
 inoremap <silent><expr> <c-space> coc#refresh()
 
 inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
@@ -129,8 +145,13 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
+map <C-n> :NERDTreeToggle<CR>
+
+" Live preview
+nmap gm :LivedownToggle<CR>
+
 " Use K to show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
+"nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
@@ -156,6 +177,8 @@ function! s:plug_help_sink(line)
   execute 'Explore' dir
 endfunction
 
+let g:OmniSharp_server_stdio = 1
+
 let g:indent_guides_enable_on_vim_startup = 1
 let g:indent_guides_guide_size = 1
 let g:indent_guides_auto_colors = 0
@@ -168,7 +191,7 @@ command! PlugHelp call fzf#run(fzf#wrap({
 
 " ensure tabs are a nice length
 highlight SignColumn ctermbg=0
-highlight ColorColumn ctermbg=0 ctermfg=1
+highlight ColorColumn ctermbg=8 ctermfg=7
 highlight MatchParen ctermfg=0
 highlight Conceal ctermbg=235 ctermfg=231
 

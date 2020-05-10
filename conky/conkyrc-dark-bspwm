@@ -53,7 +53,7 @@ ${alignr}${offset -330}< ${exec xdpyinfo | awk '/dimensions/{print $2}'} > Res
 ${voffset 20}
 ${alignr}${offset -225}< ${exec cat /etc/locale.conf | grep "LANG=" | cut -d"\"" -f2 | sed 's/LANG=//g'} > Locale ─────────────┐
 ${alignr}${offset -225}│
-${voffset 15}
+${voffset 50}
 ${alignr}${offset -297}< ${exec sensors | grep "RPM" | cut -c14-25} > Fan Speed ──────────┐
 ${alignr}${offset -297}│
 ${alignr}${offset -297}│
@@ -87,7 +87,9 @@ ${alignr}${offset -250}┌────┘
 ${alignr}${offset -290}│
 ${alignr}${offset -290}${exec cat /sys/class/power_supply/BAT0/capacity} : Battery ───────────────────┘
 ${alignr}${offset -300}< ${exec acpi | grep "Battery 0" | awk '{print $4}'} | ${battery_percent BAT0}% > BAT 0 < ${battery_bar 5,110 BAT0} >
-${voffset -310}
+${voffset -350}
+${alignr}${offset -25}│
+${alignr}${offset -25}│
 ${alignr}${offset -25}│
 ${alignr}${offset -25}│
 ${alignr}${offset -25}│

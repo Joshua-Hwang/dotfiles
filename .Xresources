@@ -53,7 +53,7 @@
 *color20:      base04
 *color21:      base06
 
-URxvt.font: xft:Unifont:size=12:antialias=false
+URxvt.font: xft:Hack:size=10:antialias=true
 !URxvt.font: xft:Unifont:size=16:antialias=false
 !URxvt.font: xft:Unifont:size=24:antialias=false
 URxvt.scrollBar: false

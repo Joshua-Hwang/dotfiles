@@ -63,7 +63,7 @@ local function run_once(cmd_arr)
     end
 end
 
-run_once({ "urxvtd", "unclutter -root" }) -- entries must be separated by commas
+-- run_once({ "urxvtd", "unclutter -root" }) -- entries must be separated by commas
 
 -- This function implements the XDG autostart specification
 --[[
@@ -81,8 +81,8 @@ awful.spawn.with_shell(
 
 local modkey       = "Mod4"
 local altkey       = "Mod1"
-local terminal     = "urxvt"
-local floating_terminal = "urxvt -name floating"
+local terminal     = "kitty"
+local floating_terminal = "kitty --name floating"
 local editor       = os.getenv("EDITOR") or "vim"
 local gui_editor   = "gvim"
 local browser      = "firefox"
@@ -453,12 +453,12 @@ root.buttons(my_table.join(
 globalkeys = my_table.join(
     -- Take a screenshot
     -- https://github.com/lcpz/dots/blob/master/bin/screenshot
-    awful.key({         }, "Print", function() awful.spawn.with_shell("/usr/bin/i3-scrot -d") end,
+    awful.key({         }, "Print", function() awful.spawn.with_shell("/home/joshua/bin/prtsc.sh") end,
               {description = "take a screenshot", group = "screenshot"}),
-    awful.key({"Control"}, "Print", function () awful.spawn.with_shell("/usr/bin/i3-scrot -w")   end,
-              {description = "capture a screenshot of active window", group = "screenshot"}),
-    awful.key({"Shift"  }, "Print", function () awful.spawn.with_shell("/usr/bin/i3-scrot -s")   end,
-              {description = "capture a screenshot of selection", group = "screenshot"}),
+    --awful.key({"Control"}, "Print", function () awful.spawn.with_shell("/usr/bin/i3-scrot -w")   end,
+    --          {description = "capture a screenshot of active window", group = "screenshot"}),
+    --awful.key({"Shift"  }, "Print", function () awful.spawn.with_shell("/usr/bin/i3-scrot -d")   end,
+    --          {description = "capture a screenshot of selection", group = "screenshot"}),
 
     -- X screen locker
     awful.key({ altkey, "Control" }, "l", function () os.execute(scrlocker) end,
@@ -671,6 +671,13 @@ globalkeys = my_table.join(
         end,
         {description = "toggle mute", group = "hotkeys"}),
 
+    -- Application menu (rofi)
+    awful.key({ altkey }, " ",
+        function ()
+            awful.spawn("/home/joshua/bin/launcher.sh")
+        end,
+        {description = "Open rofi", group = "launcher"}),
+
     -- Prompt
     awful.key({ modkey }, "r",
         function ()
@@ -854,6 +861,7 @@ awful.rules.rules = {
           "copyq",  -- Includes session name in class.
           "floating",
           "matplotlib",
+          "feh",
         },
         class = {
           "Arandr",
@@ -866,6 +874,7 @@ awful.rules.rules = {
           "veromix",
           "xtightvncviewer",
           "matplotlib",
+          "feh",
          },
         name = {
           "Event Tester",  -- xev.

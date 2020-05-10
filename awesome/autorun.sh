@@ -32,13 +32,17 @@ run msm_notifier
 # we re-source our resources file
 run xrdb ~/.Xresources
 xset r rate 250 60
+xinput set-prop 14 355 -0.5
+/usr/bin/libinput-gestures-setup start
 run ibus-daemon -drx
 run redshift-gtk
 run feh --bg-fill $HOME/Pictures/wallpaper.jpg
-run conky &
+run /home/joshua/bin/update-screen.sh
 run nm-applet
 run indicator-keylock
+rum uim-toolbar-gtk3-systray
 #run light-locker
 #run xcape -e 'Super_L=Super_L|Control_L|Escape'
 run thunar --daemon
 run pamac-tray
+run /home/joshua/bin/load-gui
