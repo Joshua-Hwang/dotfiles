@@ -21,7 +21,7 @@ Plug 'autozimu/LanguageClient-neovim', {
 Plug 'Shougo/echodoc.vim'
 Plug 'lervag/vimtex', { 'for': 'tex' }
 
-Plug 'preservim/nerdtree'
+Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
 Plug 'junegunn/fzf'
@@ -58,9 +58,6 @@ fun! TrimWhitespace()
 endfun
 command! TrimWhitespace call TrimWhitespace()
 
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
 autocmd CompleteDone * silent! pclose!
 autocmd BufEnter * call ncm2#enable_for_buffer()
 
