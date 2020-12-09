@@ -114,7 +114,7 @@ nnoremap <silent> <C-right> :wincmd l<CR>
 
 map <silent> <C-n> :NERDTreeToggle<CR>
 map <silent> <F5> :MundoToggle<CR>
-map <silent> <C-m> :FZF<CR>
+map <silent> <Space> :FZF<CR>
 
 nmap <silent> gd <Plug>(lcn-definition)
 nmap <silent> gi <Plug>(lcn-implementation)
