@@ -68,11 +68,10 @@ set mouse=a
 set foldmethod=indent
 set foldnestmax=1
 set cc=80
-set tw=79
+set tw=120
 set nowrap
 set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
 set nrformats+=alpha
-set guifont=FiraCode\ Nerd\ Font\ Mono:h11
 set completeopt=noinsert,menuone,noselect
 set signcolumn=yes
 set cmdheight=2
@@ -84,7 +83,8 @@ filetype plugin on
 highlight SignColumn ctermbg=0
 highlight Conceal ctermbg=233
 highlight Pmenu ctermfg=7 ctermbg=233
-highlight ColorColumn ctermbg=0
+highlight ColorColumn ctermbg=8 ctermfg=0
+highlight MatchParen ctermfg=0
 
 let g:echodoc_enable_at_startup = 1
 let g:camelcasemotion_key = ','
