@@ -6,6 +6,7 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-commentary'
 
 Plug 'wellle/targets.vim'
 
