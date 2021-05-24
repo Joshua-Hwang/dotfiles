@@ -66,6 +66,7 @@ set showcmd
 set encoding=UTF-8
 set nobackup
 set nowritebackup
+set visualbell
 updatetime=300
 shortmess+=c
 
