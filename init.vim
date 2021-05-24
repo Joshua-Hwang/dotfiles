@@ -39,7 +39,7 @@ set hidden
 set ignorecase smartcase
 set mouse=a
 set nowrap
-set tabstop=4 softtabstop=0 expandtab shiftwidth=2 smarttab
+set tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab
 set nrformats+=alpha
 set signcolumn=number
 set cmdheight=2
@@ -66,13 +66,21 @@ set showcmd
 set encoding=UTF-8
 set nobackup
 set nowritebackup
-set visualbell
-updatetime=300
-shortmess+=c
+set belloff=all
+set updatetime=300
+set shortmess+=c
 
 syntax on
 filetype plugin on
 filetype indent on
+
+if has("gui_running")
+  colorscheme spaceduck
+endif
+" <windows>
+set guifont=CaskaydiaCove\ NF:h12
+set renderoptions=type:directx
+" </windows>
 
 let &t_SI = "\e[6 q"
 let &t_EI = "\e[2 q"
@@ -231,4 +239,4 @@ map <silent> + :BuffergatorToggle<CR>
 "nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 "" Resume latest coc list.
 "nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
-" </typescript
+" </typescript>
