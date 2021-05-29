@@ -10,9 +10,13 @@ Plug 'tpope/vim-commentary'
 
 Plug 'wellle/targets.vim'
 
+Plug 'kshenoy/vim-signature'
+
 Plug 'preservim/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'ryanoasis/vim-devicons'
+
+Plug 'jlanzarotta/bufexplorer'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
@@ -23,20 +27,14 @@ Plug 'pineapplegiant/spaceduck', { 'branch': 'main' }
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-session'
 
-Plug 'jeetsukumaran/vim-buffergator'
-
-" <ale>
 Plug 'dense-analysis/ale'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'prabirshrestha/asyncomplete.vim'
-" </ale>
 
-" <typescript>
-" Plug 'pangloss/vim-javascript'
-" Plug 'leafgarland/typescript-vim'
-" Plug 'maxmellon/vim-jsx-pretty'
-" Plug 'jparise/vim-graphql'
-" </typescript>
+Plug 'pangloss/vim-javascript'
+Plug 'leafgarland/typescript-vim'
+Plug 'maxmellon/vim-jsx-pretty'
+Plug 'jparise/vim-graphql'
 call plug#end()
 
 set clipboard=unnamed
@@ -46,7 +44,7 @@ set mouse=a
 set nowrap
 set tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab
 set nrformats+=alpha
-set signcolumn=number
+set signcolumn=yes
 set cmdheight=2
 set splitbelow
 set splitright
@@ -65,6 +63,7 @@ set backspace=indent,eol,start
 set laststatus=2
 set ruler
 set wildmenu
+set wildcharm=<C-z>
 set sessionoptions=blank,buffers,curdir,help,tabpages
 set viewoptions-=options
 set showcmd
@@ -79,16 +78,17 @@ syntax on
 filetype plugin on
 filetype indent on
 
+colorscheme spaceduck
 if has("gui_running")
-  colorscheme spaceduck
+  if has("win32")
+    set guifont=CaskaydiaCove\ NF:h12
+    set renderoptions=type:directx
+  endif
 endif
-" <windows>
-set guifont=CaskaydiaCove\ NF:h12
-set renderoptions=type:directx
-" </windows>
 
-let &t_SI = "\e[6 q"
-let &t_EI = "\e[2 q"
+let &t_SI = "\e[5 q"
+let &t_SR = "\e[4 q"
+let &t_EI = "\e[1 q"
 
 let NERDTreeQuitOnOpen=1
 
@@ -119,11 +119,26 @@ function MyNerdToggle()
     if &filetype == 'nerdtree'
         :NERDTreeToggle
     else
+      if bufname()
         :NERDTreeFind
+      else
+        :NERDTreeToggle
+      endif
     endif
 endfunction
 
+" Show syntax highlighting groups for word under cursor
+nmap <F2> :call <SID>SynStack()<CR>
+function! <SID>SynStack()
+    if !exists("*synstack")
+        return
+    endif
+    echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
 map <silent> <F12> :tabedit $MYVIMRC<CR>
+
+map <silent> [t :tabp<CR>
+map <silent> ]t :tabn<CR>
 
 map <silent> <C-b> :Buffers<CR>
 map <silent> <C-f> :Files<CR>
@@ -131,8 +146,15 @@ map <silent> <C-f> :Files<CR>
 map <silent> <F5> :SaveSession<CR>
 map <silent> <F9> :OpenSession<CR>
 
-map <silent> _ :call MyNerdToggle()<CR>
-map <silent> + :BuffergatorToggle<CR>
+map <silent> _ :call MyNerdToggle()<CR>:vertical resize<CR>
+" If another buffer tries to replace NERDTree, put it in the other window, and
+" bring back NERDTree.
+autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
+     \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
+
+map <silent> + :ToggleBufExplorer<CR>
+let g:bufExplorerDisableDefaultKeyMapping=1
+let g:bufExplorerShowNoName=1
 
 let g:ale_disable_lsp = 1
 let g:ale_fix_on_save = 1
@@ -147,9 +169,12 @@ let g:ale_linters = {
 \}
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'ruby': ['rubocop']
+\   'ruby': ['rubocop'],
+\   'javascript': ['eslint', 'prettier', 'tslint'],
+\   'typescript': ['eslint', 'prettier', 'tslint']
 \}
 
+let g:lsp_diagnostics_echo_cursor = 1
 if executable('solargraph')
     " gem install solargraph
     au User lsp_setup call lsp#register_server({
@@ -159,7 +184,15 @@ if executable('solargraph')
         \ 'whitelist': ['ruby'],
         \ })
 endif
-
+if executable('typescript-language-server')
+    " npm install -g typescript typescript-language-server
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'typescript-language-server',
+        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
+        \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'tsconfig.json'))},
+        \ 'whitelist': ['typescript', 'typescript.tsx', 'typescriptreact'],
+        \ })
+endif
 function! s:on_lsp_buffer_enabled() abort
     setlocal omnifunc=lsp#complete
     if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
@@ -173,13 +206,9 @@ function! s:on_lsp_buffer_enabled() abort
     nmap <buffer> [g <plug>(lsp-previous-diagnostic)
     nmap <buffer> ]g <plug>(lsp-next-diagnostic)
     nmap <buffer> K <plug>(lsp-hover)
-    inoremap <buffer> <expr><c-f> lsp#scroll(+4)
-    inoremap <buffer> <expr><c-d> lsp#scroll(-4)
 
     let g:lsp_format_sync_timeout = 1000
     autocmd! BufWritePre *.rs,*.go call execute('LspDocumentFormatSync')
-
-    " refer to doc to add more commands
 endfunction
 
 augroup lsp_install
