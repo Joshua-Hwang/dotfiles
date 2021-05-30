@@ -36,7 +36,15 @@ Plug 'leafgarland/typescript-vim'
 Plug 'maxmellon/vim-jsx-pretty'
 Plug 'jparise/vim-graphql'
 call plug#end()
+
+augroup SaveManualFolds
+    autocmd!
+    au BufWinLeave, BufLeave ?* silent! mkview
+    au BufWinEnter           ?* silent! loadview
+augroup END
+
 au BufRead * normal zR
+
 " If another buffer tries to replace NERDTree, put it in the other window, and
 " bring back NERDTree.
 autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
@@ -176,14 +184,14 @@ map <silent> <C-f> :Files<CR>
 map <silent> <F5> :SaveSession<CR>
 map <silent> <F9> :OpenSession<CR>
 
-map <silent> _ :call MyNerdToggle()<CR>:vertical resize<CR>
+map <silent> _ :call MyNerdToggle()<CR>
 
 map <silent> + :ToggleBufExplorer<CR>
 let g:bufExplorerDisableDefaultKeyMapping=1
 let g:bufExplorerShowNoName=1
 
 let g:ale_disable_lsp = 1
-let g:ale_fix_on_save = 1
+"let g:ale_fix_on_save = 1
 let g:ale_lint_on_enter = 1
 let g:ale_lint_on_text_changed = 1
 let g:ale_lint_on_insert_leave = 1
