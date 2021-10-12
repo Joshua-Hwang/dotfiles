@@ -8,88 +8,34 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-commentary'
 
-Plug 'wellle/targets.vim'
-
 Plug 'kshenoy/vim-signature'
 
-Plug 'preservim/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
 Plug 'ryanoasis/vim-devicons'
 
-Plug 'jlanzarotta/bufexplorer'
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+Plug 'nvim-telescope/telescope.nvim'
 
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+Plug 'kyazdani42/nvim-web-devicons' " for file icons
+Plug 'kyazdani42/nvim-tree.lua'
 
-Plug 'sheerun/vim-polyglot'
-Plug 'cocopon/iceberg.vim'
-Plug 'guns/xterm-color-table.vim'
-
-Plug 'xolox/vim-misc'
-Plug 'xolox/vim-session'
-
-Plug 'dense-analysis/ale'
-Plug 'prabirshrestha/vim-lsp'
-
-Plug 'pangloss/vim-javascript'
-Plug 'leafgarland/typescript-vim'
-Plug 'maxmellon/vim-jsx-pretty'
-Plug 'jparise/vim-graphql'
+Plug 'hrsh7th/nvim-compe'
 call plug#end()
 
-augroup SaveManualFolds
-    autocmd!
-    au BufWinLeave, BufLeave ?* silent! mkview
-    au BufWinEnter           ?* silent! loadview
-augroup END
+" Put plugins and dictionaries in this dir (also on Windows)
+let vimDir = '$HOME/.vim'
+let &runtimepath.=','.vimDir
+" Keep undo history across sessions by storing it in a file
+let myUndoDir = expand(vimDir . '/undodir')
+" Create dirs
+call system('mkdir ' . vimDir)
+call system('mkdir ' . myUndoDir)
+let &undodir = myUndoDir
+set undofile
 
-au BufRead * normal zR
-
-" If another buffer tries to replace NERDTree, put it in the other window, and
-" bring back NERDTree.
-autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
-     \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
-function MyNerdToggle()
-    if &filetype == 'nerdtree'
-        :NERDTreeToggle
-    else
-      if bufname() == ''
-        :NERDTreeToggle
-      else
-        :NERDTreeFind
-      endif
-    endif
-endfunction
-
-function! <SID>SynStack()
-    if !exists("*synstack")
-        return
-    endif
-    echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
-endfunc
-
-function! s:on_lsp_buffer_enabled() abort
-    setlocal omnifunc=lsp#complete
-    inoremap <expr> <C-n> pumvisible() ? "\<C-n>" :"\<C-x><C-o>"
-    inoremap <expr> <C-p> pumvisible() ? "\<C-p>" :"\<C-x><C-o>"
-    if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
-    nmap <buffer> gd <plug>(lsp-definition)
-    nmap <buffer> gs <plug>(lsp-document-symbol-search)
-    nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
-    nmap <buffer> gr <plug>(lsp-references)
-    nmap <buffer> gi <plug>(lsp-implementation)
-    nmap <buffer> gt <plug>(lsp-type-definition)
-    nmap <buffer> <leader>rn <plug>(lsp-rename)
-    nmap <buffer> [g <plug>(lsp-previous-diagnostic)
-    nmap <buffer> ]g <plug>(lsp-next-diagnostic)
-    nmap <buffer> K <plug>(lsp-hover)
-
-    let g:lsp_format_sync_timeout = 60000
-    autocmd! BufWritePre *.rs,*.go call execute('LspDocumentFormatSync')
-endfunction
-
-set clipboard=unnamed
-set hidden
 set ignorecase smartcase
 set mouse=a
 set nowrap
@@ -126,112 +72,195 @@ set updatetime=300
 set shortmess+=c
 set foldmethod=manual
 set foldcolumn=1
-set completeopt=menuone,popuphidden,noselect,noinsert
 
-syntax on
-filetype plugin on
-filetype indent on
-
-colorscheme iceberg
-if has("gui_running")
-  if has("win32")
-    set guifont=CaskaydiaCove\ NF:h12
-    set renderoptions=type:directx
-  endif
-  if has("macunix")
-    set guifont=MesloLGS\NF:h13
-  endif
-endif
-
-let &t_SI = "\e[5 q"
-let &t_SR = "\e[4 q"
-let &t_EI = "\e[1 q"
-let &t_ut = ''
-
-let NERDTreeQuitOnOpen=1
-
-let g:session_autosave='yes'
-let g:session_autosave_to='default'
-let g:session_autoload='no'
-let g:session_persist_colors=0
-let g:session_persist_font=0
-
-let g:matchparen_timeout=2
-let g:matchparen_insert_timeout=2
-
-" Put plugins and dictionaries in this dir (also on Windows)
-let vimDir = '$HOME/.vim'
-let &runtimepath.=','.vimDir
-
-" Keep undo history across sessions by storing it in a file
-let myUndoDir = expand(vimDir . '/undodir')
-" Create dirs
-call system('mkdir ' . vimDir)
-call system('mkdir ' . myUndoDir)
-let &undodir = myUndoDir
-set undofile
-
-" Show syntax highlighting groups for word under cursor
-nmap <F2> :call <SID>SynStack()<CR>
-map <silent> <F12> :tabedit $MYVIMRC<CR>
+map <silent> <leader>c :cclose<CR>
+map <silent> <leader>l :lclose<CR>
 
 map <silent> [t :tabp<CR>
 map <silent> ]t :tabn<CR>
 
-map <silent> <C-b> :Buffers<CR>
-map <silent> <C-f> :Files<CR>
+let g:nvim_tree_quit_on_open=1
+let g:nvim_tree_width=60
+function MyNvimTreeToggle()
+    if &filetype == 'NvimTree'
+        :NvimTreeToggle
+    else
+      if bufname() == ''
+        :NvimTreeToggle
+      else
+        :NvimTreeFindFile
+      endif
+    endif
+endfunction
+map <silent> _ :call MyNvimTreeToggle()<CR>
+lua << EOF
+--Telescope--------------------------------------------------------------------
+require'telescope'.setup {
+  defaults = {
+    mappings = {
+      i = {
+        ["<C-j>"] = require('telescope.actions').move_selection_next,
+        ["<C-k>"] = require('telescope.actions').move_selection_previous,
+      },
+      n = {
+        ["<C-j>"] = require('telescope.actions').move_selection_next,
+        ["<C-k>"] = require('telescope.actions').move_selection_previous,
+      },
+    }
+  },
+  pickers = {
+    buffers = {
+      sort_lastused = true,
+      mappings = {
+        n = {
+          ["d"] = require('telescope.actions').delete_buffer,
+        }
+      }
+    },
+  }
+}
+local shh = { noremap=true, silent=true }
+vim.api.nvim_set_keymap("n", "<leader>ff", "<cmd>lua require('telescope.builtin').find_files()<CR>", shh)
+vim.api.nvim_set_keymap("n", "<leader>fg", "<cmd>lua require('telescope.builtin').live_grep()<CR>", shh)
+vim.api.nvim_set_keymap("n", "<leader>fb", "<cmd>lua require('telescope.builtin').buffers()<CR>", shh)
+vim.api.nvim_set_keymap("n", "<leader>fh", "<cmd>lua require('telescope.builtin').help_tags()<CR>", shh)
 
-map <silent> <F5> :SaveSession<CR>
-map <silent> <F9> :OpenSession<CR>
+vim.api.nvim_set_keymap("n", "+", "<cmd>lua require('telescope.builtin').buffers()<CR>", shh)
 
-map <silent> _ :call MyNerdToggle()<CR>
+--Tree sitter------------------------------------------------------------------
+require'nvim-treesitter.configs'.setup {
+  highlight = {
+    enable = true,
+    custom_captures = {
+      -- Highlight the @foo.bar capture group with the "Identifier" highlight group.
+      ["foo.bar"] = "Identifier",
+    },
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = "gnn",
+      node_incremental = "grn",
+      scope_incremental = "grc",
+      node_decremental = "grm",
+    },
+  },
+  indent = {
+    enable = true
+  }
+}
+--Auto completion-------------------------------------------------------------
+vim.o.completeopt = "menuone,noselect"
 
-map <silent> + :ToggleBufExplorer<CR>
-let g:bufExplorerDisableDefaultKeyMapping=1
-let g:bufExplorerShowNoName=1
+-- Compe setup
+require'compe'.setup {
+  enabled = true;
+  autocomplete = false;
+  debug = false;
+  min_length = 1;
+  preselect = 'enable';
+  throttle_time = 80;
+  source_timeout = 200;
+  incomplete_delay = 400;
+  max_abbr_width = 100;
+  max_kind_width = 100;
+  max_menu_width = 100;
+  documentation = true;
 
-let g:ale_disable_lsp = 1
-"let g:ale_fix_on_save = 1
-let g:ale_lint_on_enter = 1
-let g:ale_lint_on_text_changed = 1
-let g:ale_lint_on_insert_leave = 1
-let g:ale_sign_column_always = 1
+  source = {
+    path = true;
+    nvim_lsp = true;
+  };
+}
 
-let g:ale_linters_explicit = 1
-let g:ale_linters = {
-\   'ruby': ['rubocop'],
-\   'javascript': ['eslint'],
-\   'typescript': ['eslint', 'tslint'],
-\}
-let g:ale_fixers = {
-\   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'ruby': ['rubocop'],
-\   'javascript': ['eslint'],
-\   'typescript': ['eslint', 'tslint'],
-\}
+local t = function(str)
+  return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
 
-let g:lsp_diagnostics_echo_cursor = 1
-if executable('solargraph')
-    " gem install solargraph
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'solargraph',
-        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
-        \ 'initialization_options': {"diagnostics": "true"},
-        \ 'whitelist': ['ruby'],
-        \ })
-endif
-if executable('typescript-language-server')
-    " npm install -g typescript typescript-language-server
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'typescript-language-server',
-        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
-        \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'tsconfig.json'))},
-        \ 'whitelist': ['typescript', 'typescript.tsx', 'typescriptreact'],
-        \ })
-endif
+local check_back_space = function()
+    local col = vim.fn.col('.') - 1
+    if col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
+        return true
+    else
+        return false
+    end
+end
 
-augroup lsp_install
-    au!
-    " call s:on_lsp_buffer_enabled only for languages that has the server registered.
-    autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
-augroup END
+-- Use (s-)tab to:
+--- move to prev/next item in completion menuone
+--- jump to prev/next snippet's placeholder
+_G.tab_complete = function()
+  if vim.fn.pumvisible() == 1 then
+    return t "<C-n>"
+  elseif check_back_space() then
+    return t "<Tab>"
+  else
+    return vim.fn['compe#complete']()
+  end
+end
+_G.s_tab_complete = function()
+  if vim.fn.pumvisible() == 1 then
+    return t "<C-p>"
+  else
+    return t "<S-Tab>"
+  end
+end
+
+vim.api.nvim_set_keymap("i", "<C-n>", "v:lua.tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("s", "<C-n>", "v:lua.tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("i", "<C-p>", "v:lua.s_tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("s", "<C-p>", "v:lua.s_tab_complete()", {expr = true})
+
+--This line is important for auto-import
+vim.api.nvim_set_keymap('i', '<C-y>', 'compe#confirm("<cr>")', {expr = true})
+
+--LSP-------------------------------------------------------------------------
+local nvim_lsp = require('lspconfig')
+
+-- Use an on_attach function to only map the following keys
+-- after the language server attaches to the current buffer
+local on_attach = function(client, bufnr)
+  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+  --Enable completion triggered by <c-x><c-o>
+  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+  buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', shh)
+  buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', shh)
+  buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', shh)
+  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', shh)
+  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', shh)
+  buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', shh)
+  buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', shh)
+  buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', shh)
+  buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', shh)
+  buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', shh)
+  buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', shh)
+  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', shh)
+  buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', shh)
+  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', shh)
+  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', shh)
+  buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', shh)
+  buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", shh)
+
+end
+
+-- Use a loop to conveniently call 'setup' on multiple servers and
+-- map buffer local keybindings when the language server attaches
+local servers = { "tsserver" }
+for _, lsp in ipairs(servers) do
+  nvim_lsp[lsp].setup {
+    on_attach = on_attach,
+    flags = {
+      debounce_text_changes = 150,
+    }
+  }
+end
+EOF
