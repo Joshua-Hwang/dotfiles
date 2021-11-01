@@ -23,6 +23,8 @@ return require('packer').startup(function()
 
   use 'neovim/nvim-lspconfig'
 
+  use 'dense-analysis/ale'
+
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
 
   use 'hrsh7th/nvim-compe'

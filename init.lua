@@ -22,7 +22,7 @@ opt.equalalways = true
 opt.incsearch = true
 opt.hlsearch = true
 opt.number = true
-opt.relativenumber = true
+opt.relativenumber = false
 opt.listchars = 'tab:> ,trail:-,extends:>,precedes:<,nbsp:+'
 opt.list = true
 opt.formatoptions:append('j')
@@ -36,14 +36,24 @@ opt.ruler = true
 opt.encoding = 'UTF-8'
 opt.completeopt = 'menuone,noselect' -- For nvim-compe
 
-vim.api.nvim_set_keymap('n', '<leader>c', ':cclose<cr>', { silent = true })
-vim.api.nvim_set_keymap('n', '<leader>l', ':lclose<cr>', { silent = true })
+vim.api.nvim_set_keymap('n', '<leader>cq', ':cclose<cr>', { silent = true })
+vim.api.nvim_set_keymap('n', '<leader>lq', ':lclose<cr>', { silent = true })
 
 vim.api.nvim_set_keymap('n', '[t', ':tabp<cr>', { silent = true })
 vim.api.nvim_set_keymap('n', ']t', ':tabn<cr>', { silent = true })
 
 vim.api.nvim_set_keymap('n', '<C-h>', 'zH', { silent = true })
 vim.api.nvim_set_keymap('n', '<C-l>', 'zL', { silent = true })
+
+--ALE--------------------------------------------------------------------------
+g.ale_disable_lsp = 1
+g.ale_fixers = {
+  rust = { "rustfmt" },
+  typescript = { "eslint", "prettier" },
+  javascript = { "eslint", "prettier" },
+  typescriptreact = { "eslint", "prettier" },
+  javascriptreact = { "eslint", "prettier" }
+}
 
 --Nvim Tree--------------------------------------------------------------------
 require'nvim-tree'.setup {
@@ -53,6 +63,7 @@ require'nvim-tree'.setup {
 }
 g.nvim_tree_quit_on_open = 1
 vim.api.nvim_set_keymap('n', '_', ':NvimTreeToggle<CR>', { silent = true })
+vim.api.nvim_command('command FF NvimTreeFindFile')
 
 g.sonokai_style = 'andromeda'
 g.sonokai_enable_italic = 1
@@ -218,7 +229,7 @@ end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { "pyright", "tsserver", "clangd" }
+local servers = { "pyright", "rust_analyzer", "tsserver", "clangd" }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
     on_attach = on_attach,
