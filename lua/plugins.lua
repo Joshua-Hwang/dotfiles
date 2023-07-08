@@ -8,8 +8,34 @@ return require('packer').startup(function()
   use 'tpope/vim-commentary'
   use 'tpope/vim-unimpaired'
   use 'tpope/vim-speeddating'
-  use 'rstacruz/vim-closer'
+  use 'tpope/vim-dispatch'
+  use 'tommcdo/vim-exchange'
   use 'andymass/vim-matchup'
+  use 'wellle/targets.vim'
+
+  use 'radenling/vim-dispatch-neovim'
+
+  use {
+    "folke/todo-comments.nvim",
+    requires = "nvim-lua/plenary.nvim",
+  }
+
+  use 'folke/neodev.nvim'
+
+  use {
+    'jiangmiao/auto-pairs',
+    ft = {'clojure'}
+  }
+
+  use {
+    'p00f/nvim-ts-rainbow'
+  }
+
+  use {
+    'Olical/conjure',
+    requires = 'clojure-vim/vim-jack-in',
+    ft = {'clojure','scheme'}
+  }
 
   use {
     'kyazdani42/nvim-tree.lua',
@@ -29,5 +55,12 @@ return require('packer').startup(function()
 
   use 'hrsh7th/nvim-compe'
 
-  use 'sainnhe/sonokai'
+  -- use 'sainnhe/sonokai'
+  -- use 'morhetz/gruvbox'
+  use 'ellisonleao/gruvbox.nvim'
+
+  -- Delay repeat execution of certain keys
+  --use 'ja-ford/delaytrain.nvim'
+
+  use 'nvim-treesitter/nvim-treesitter-context'
 end)

@@ -21,8 +21,9 @@ opt.splitright = true
 opt.equalalways = true
 opt.incsearch = true
 opt.hlsearch = true
+opt.cursorcolumn = true
 opt.number = true
-opt.relativenumber = false
+opt.relativenumber = true
 opt.listchars = 'tab:> ,trail:-,extends:>,precedes:<,nbsp:+'
 opt.list = true
 opt.formatoptions:append('j')
@@ -45,29 +46,70 @@ vim.api.nvim_set_keymap('n', ']t', ':tabn<cr>', { silent = true })
 vim.api.nvim_set_keymap('n', '<C-h>', 'zH', { silent = true })
 vim.api.nvim_set_keymap('n', '<C-l>', 'zL', { silent = true })
 
+--Merlin-----------------------------------------------------------------------
+vim.cmd[[let g:opamshare = substitute(system('opam var share'),'\n$','','''')]]
+vim.cmd[[execute "set rtp+=" . g:opamshare . "/merlin/vim"]]
+
+--Conjure----------------------------------------------------------------------
+g["conjure#filetype#scheme"] = "conjure.client.guile.socket"
+g["conjure#client#guile#socket#pipename"] = os.getenv( "HOME" ) .. "/guile-repl.socket"
+
+--todo-------------------------------------------------------------------------
+require("todo-comments").setup()
+
+--gruvbox----------------------------------------------------------------------
+vim.o.termguicolors = true
+vim.o.bg = 'light'
+vim.cmd('colorscheme gruvbox')
+
+--auto pair--------------------------------------------------------------------
+g.AutoPairs = {
+  ['(']=')',
+  ['[']=']',
+  ['{']='}',
+  ['"']='"',
+  ['`']='`'
+}
+
+--delay train------------------------------------------------------------------
+--require('delaytrain').setup()
+
+--treesitter context-----------------------------------------------------------
+require('treesitter-context').setup()
+
 --ALE--------------------------------------------------------------------------
 g.ale_disable_lsp = 1
+g.ale_linters_explicit = 1
+g.ale_linters = {
+  clojure = { 'clj-kondo', 'joker' }
+}
 g.ale_fixers = {
   rust = { "rustfmt" },
   typescript = { "eslint", "prettier" },
   javascript = { "eslint", "prettier" },
   typescriptreact = { "eslint", "prettier" },
-  javascriptreact = { "eslint", "prettier" }
+  javascriptreact = { "eslint", "prettier" },
+  html = { "prettier" },
+  cpp = { "clang-format", "clangtidy" },
+  go = { "gofmt" },
+  dart = { "dart-format" },
+  dune = { "dune" }
 }
 
 --Nvim Tree--------------------------------------------------------------------
 require'nvim-tree'.setup {
   view = {
-    width = 30
+    width = 30,
+    number = true,
+    relativenumber = true,
+  },
+  git = {
+    ignore = false,
   }
 }
 g.nvim_tree_quit_on_open = 1
 vim.api.nvim_set_keymap('n', '_', ':NvimTreeToggle<CR>', { silent = true })
 vim.api.nvim_command('command FF NvimTreeFindFile')
-
-g.sonokai_style = 'andromeda'
-g.sonokai_enable_italic = 1
-vim.cmd('colorscheme sonokai')
 
 --Telescope--------------------------------------------------------------------
 require'telescope'.setup {
@@ -95,12 +137,11 @@ require'telescope'.setup {
   }
 }
 local shh = { noremap=true, silent=true }
-vim.api.nvim_set_keymap("n", "<leader>ff", "<cmd>lua require('telescope.builtin').find_files()<CR>", shh)
-vim.api.nvim_set_keymap("n", "<leader>fg", "<cmd>lua require('telescope.builtin').live_grep()<CR>", shh)
-vim.api.nvim_set_keymap("n", "<leader>fb", "<cmd>lua require('telescope.builtin').buffers()<CR>", shh)
-vim.api.nvim_set_keymap("n", "<leader>fh", "<cmd>lua require('telescope.builtin').help_tags()<CR>", shh)
-
-vim.api.nvim_set_keymap("n", "+", "<cmd>lua require('telescope.builtin').buffers()<CR>", shh)
+vim.keymap.set("n", "<leader>ff", function() require('telescope.builtin').find_files() end, shh)
+vim.keymap.set("n", "<leader>fg", function() require('telescope.builtin').live_grep() end, shh)
+vim.keymap.set("n", "<leader>fb", function() require('telescope.builtin').buffers() end, shh)
+vim.keymap.set("n", "<leader>fh", function() require('telescope.builtin').help_tags() end, shh)
+vim.keymap.set("n", "<leader>ft", "<cmd>TodoTelescope<CR>", shh)
 
 --Tree sitter------------------------------------------------------------------
 require'nvim-treesitter.configs'.setup {
@@ -127,6 +168,11 @@ require'nvim-treesitter.configs'.setup {
   },
   indent = {
     enable = true
+  },
+  rainbow = {
+    enable = true,
+    extended_mode = true,
+    max_file_lines = nil,
   }
 }
 --Auto completion-------------------------------------------------------------
@@ -194,6 +240,9 @@ vim.api.nvim_set_keymap("s", "<C-p>", "v:lua.s_tab_complete()", {expr = true})
 --This line is important for auto-import
 vim.api.nvim_set_keymap('i', '<C-y>', 'compe#confirm("<cr>")', {expr = true})
 
+--neodev----------------------------------------------------------------------
+require("neodev").setup()
+
 --LSP-------------------------------------------------------------------------
 local nvim_lsp = require('lspconfig')
 
@@ -215,11 +264,12 @@ local on_attach = function(client, bufnr)
   -- buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', shh)
   -- buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', shh)
   -- buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', shh)
-  buf_set_keymap('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', shh)
+  -- buf_set_keymap('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', shh)
+  buf_set_keymap('n', 'gt', '<cmd>lua vim.lsp.buf.type_definition()<CR>', shh)
   buf_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', shh)
   buf_set_keymap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', shh)
   buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', shh)
-  buf_set_keymap('n', '<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', shh)
+  buf_set_keymap('n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', shh)
   buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', shh)
   buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', shh)
   -- buf_set_keymap('n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', shh)
@@ -229,7 +279,7 @@ end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { "pyright", "rust_analyzer", "tsserver", "clangd" }
+local servers = { "pyright", "rust_analyzer", "tsserver", "clangd", 'gopls', 'dartls', 'lua_ls', 'ocamllsp' }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
     on_attach = on_attach,
